@@ -6,10 +6,10 @@ declare module '@playwright/test' {
         selectButtonAndClick(selector: string): Promise<void>;
         verifyCookies(): Promise<void>;
         isElementPresent(selector: string): Promise<boolean>;
-        selectOriginFlight(origin: string): Promise<void>;
-        selectDestinationFlight(destination: string): Promise<void>;
+        selectOriginFlight(copys: copysType): Promise<void>;
+        selectDestinationFlight(copys: copysType): Promise<void>;
         selectDateInitFlight(copys: copysType): Promise<void>;
-        selectDateEndFlight(date?: Date): Promise<void>;
+        selectDateEndFlight(copys: copysType): Promise<void>;
         selectElementDOM(selector: string): Promise<ElementHandle<SVGElement | HTMLElement> | null>;
         setPhoto(photoName: string): Promise<void>;
         getTimestamp(): string;

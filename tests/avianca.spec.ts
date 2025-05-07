@@ -25,14 +25,10 @@ test.describe('Comenzo prueba avianca', () => {
 
         const idioma = copys.getLang();
 
-
+        await page.selectOriginFlight(copys);
         await page.takeScreenshot('03-ciudad-origen');
 
-        const destino = page.getByPlaceholder(copys[idioma].destino);
-        await destino.click();
-        await destino.fill(copys['ciudad_destino']);
-        await destino.press('Enter');
-        await (page.locator('id=' + copys['ciudad_destino'])).click();
+        await page.selectDestinationFlight(copys);
         await page.takeScreenshot('04-ciudad-destino');
 
         const fechaIda = await page.locator('id=departureInputDatePickerId')

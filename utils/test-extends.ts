@@ -49,7 +49,7 @@ export const test = base.extend({
             return responseLang;
         }
 
-        page.selectDateInitFlight = async (copys: copysType): Promise<void> => {
+        page.selectOriginFlight = async (copys: copysType): Promise<void> => {
             const currentLang = await page.getLangPage();
             await expect(page.locator('.content-wrap')).toBeVisible();
             await expect(page.locator('#originBtn')).toBeVisible();
@@ -58,6 +58,15 @@ export const test = base.extend({
             await origen.fill(copys['ciudad_origen']);
             await origen.press('Enter');
             await (page.locator('id=' + copys['ciudad_origen'])).click();
+        }
+
+        page.selectDestinationFlight = async (copys: copysType): Promise<void> => {
+            const currentLang = await page.getLangPage();
+            const destino = page.getByPlaceholder(copys[currentLang].destino);
+            await destino.click();
+            await destino.fill(copys['ciudad_destino']);
+            await destino.press('Enter');
+            await (page.locator('id=' + copys['ciudad_destino'])).click();
         }
 
         await use(page);
