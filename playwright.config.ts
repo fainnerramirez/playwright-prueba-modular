@@ -4,7 +4,7 @@ export default defineConfig({
   use: {
     headless: false,
     //viewport: { width: 1280, height: 800 },
-    viewport: { width: 1380, height: 1000 },
+    viewport: { width: 1280, height: 1000 },
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
     locale: 'es-ES',
     ignoreHTTPSErrors: true,
