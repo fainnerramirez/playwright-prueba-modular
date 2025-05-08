@@ -1,5 +1,5 @@
 import { test as base, ElementHandle, expect, selectors } from '@playwright/test';
-import type { copysType, Lang } from '../types/aviancaTypes';
+import type { Lang } from '../types/aviancaTypes';
 import type { Page } from 'playwright';
 import { copys } from '../data/copys';
 import { getValueElement } from './constants/constants';
@@ -7,7 +7,10 @@ import { getValueElement } from './constants/constants';
 type propsFixtures = {
     home: Page,
     flights: Page,
-    passenger: Page
+    passenger: Page,
+    services: Page,
+    seating: Page,
+    payment: Page
 }
 
 export const test = base.extend<propsFixtures>({
@@ -207,7 +210,9 @@ export const test = base.extend<propsFixtures>({
             });
         }
         await use(page);
-    }
+    },
+    seating: async ({ page }, use) => { },
+    payment: async ({ page }, use) => { }
 });
 
 export { expect } from '@playwright/test';
