@@ -1,9 +1,16 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, ElementHandle, expect, selectors } from '@playwright/test';
 import type { copysType, Lang } from '../types/aviancaTypes';
+import type { Page } from 'playwright';
+import { copys } from '../data/copys';
 
-export const test = base.extend({
+type propsFixtures = {
+    home: Page,
+    flights: Page,
+    passenger: Page
+}
+
+export const test = base.extend<propsFixtures>({
     page: async ({ page }, use, testInfo) => {
-
         let step = 0;
 
         page.getTimestamp = (): string => {
@@ -49,7 +56,27 @@ export const test = base.extend({
             return responseLang;
         }
 
-        page.selectOriginFlight = async (copys: copysType): Promise<void> => {
+        page.isElementPresent = async (selector: string): Promise<boolean> => {
+            return await page.locator(selector).isVisible();
+        }
+
+        page.selectElementDOM = async (selector: string): Promise<ElementHandle<SVGElement | HTMLElement> | null> => {
+            return await page.$(selector);
+        }
+
+        page.selectButtonAndClick = async (selector: string): Promise<void> => {
+            const elementPresent = await page.isElementPresent(selector);
+            if (elementPresent) {
+                await expect(page.locator(selector)).toBeVisible();
+                await page.locator(selector).click();
+            }
+        }
+
+        await use(page);
+    },
+    home: async ({ page }, use) => {
+
+        page.selectOriginFlight = async (): Promise<void> => {
             const currentLang = await page.getLangPage();
             await expect(page.locator('.content-wrap')).toBeVisible();
             await expect(page.locator('#originBtn')).toBeVisible();
@@ -60,13 +87,81 @@ export const test = base.extend({
             await (page.locator('id=' + copys['ciudad_origen'])).click();
         }
 
-        page.selectDestinationFlight = async (copys: copysType): Promise<void> => {
+        page.selectDestinationFlight = async (): Promise<void> => {
             const currentLang = await page.getLangPage();
             const destino = page.getByPlaceholder(copys[currentLang].destino);
             await destino.click();
             await destino.fill(copys['ciudad_destino']);
             await destino.press('Enter');
             await (page.locator('id=' + copys['ciudad_destino'])).click();
+        }
+
+        page.selectDateInitFlight = async (): Promise<void> => {
+            await expect(page.locator('id=departureInputDatePickerId')).toBeVisible();
+            const fechaIda = await page.locator('id=departureInputDatePickerId');
+            fechaIda.click();
+            await expect(page.locator('span').filter({ hasText: copys['fecha_salida'] })).toBeVisible();
+            await page.locator('span').filter({ hasText: copys['fecha_salida'] }).click();
+        }
+
+        page.selectDateEndFlight = async (): Promise<void> => {
+            await expect(page.locator('span').filter({ hasText: copys['fecha_llegada'] })).toBeVisible();
+            await page.locator('span').filter({ hasText: copys['fecha_llegada'] }).click();
+        }
+
+        page.selectPassengers = async (): Promise<void> => {
+            await page.waitForTimeout(300);
+            await page.getByRole('button', { name: '' }).nth(1).click();
+            await page.getByRole('button', { name: '' }).nth(2).click();
+            await page.getByRole('button', { name: '' }).nth(3).click();
+            const confirmar = await page.locator('div#paxControlSearchId > div > div:nth-of-type(2) > div > div > button')
+            confirmar.click();
+        }
+
+        page.selectCheckWayReturn = async (): Promise<void> => {
+            const wayReturn = page.locator("#journeytypeId_0");
+            await expect(wayReturn).toBeVisible();
+            await wayReturn.scrollIntoViewIfNeeded();
+            wayReturn.click();
+        }
+
+        page.selectCheckOneWay = async (): Promise<void> => {
+            const oneWay = page.locator("#journeytypeId_1");
+            await expect(oneWay).toBeVisible();
+            await oneWay.scrollIntoViewIfNeeded();
+            oneWay.click();
+        }
+
+        await use(page);
+    },
+    flights: async ({ page }, use) => {
+
+        page.validateModalSelectionFlight = async (): Promise<void> => {
+            await page.waitForTimeout(1500);
+            const isVisibleModal = await page.locator("#FB310").first().isVisible();
+            if (isVisibleModal) {
+                await expect(page.locator(".cro-button.cro-no-accept-upsell-button")).toBeVisible();
+                await page.locator(".cro-button.cro-no-accept-upsell-button").first().click();
+            }
+        }
+
+        page.selectFlightsOneWay = async (): Promise<void> => {
+            await page.waitForSelector('#pageWrap', { timeout: 15000 });
+            await expect(page.locator(".journey_price_fare-select_label-text").first()).toBeVisible();
+            await page.locator('.journey_price_fare-select_label-text').first().click();
+            await page.waitForSelector(".journey_fares");
+            await page.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
+            await page.validateModalSelectionFlight();
+        }
+
+        page.selectFlightReturns = async (): Promise<void> => {
+            await page.waitForSelector("#journeysContainerId_1", { timeout: 15000 });
+            const containerVuelta = page.locator("#journeysContainerId_1");
+            await expect(containerVuelta).toBeVisible();
+            await containerVuelta.locator(".journey_price_fare-select_label-text").first().click();
+            await page.takeScreenshot('13-seleccion-vuelo-regreso');
+            await containerVuelta.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
+            await page.validateModalSelectionFlight();
         }
 
         await use(page);

@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { copys } from '../data/copys';
 
 test.describe('Comenzo prueba avianca', () => {
     test('prueba home avianca', async ({ page }) => {
@@ -12,80 +11,38 @@ test.describe('Comenzo prueba avianca', () => {
         });
 
         await page.goto('https://www.avianca.com/');
-        await page.takeScreenshot('01-goto-avianca');
-
+        await page.takeScreenshot('página-principal-avianca');
         await page.verifyCookies();
 
-        //setear solo ida
-        // const fechaSoloIda = page.locator("#journeytypeId_1")
-        // // expect(page.locator("#journeytypeId_1"));
-        // // expect(page.locator("#journeytypeId_1")).toBeVisible(); // espera hasta 10s si es necesario
-        // await fechaSoloIda.scrollIntoViewIfNeeded();
-        // await page.locator("#journeytypeId_1").click();
+        await page.selectOriginFlight();
+        await page.takeScreenshot('seleccion-ciudad-origen');
 
-        const idioma = copys.getLang();
+        await page.selectDestinationFlight();
+        await page.takeScreenshot('seleccion-ciudad-destino');
 
-        await page.selectOriginFlight(copys);
-        await page.takeScreenshot('03-ciudad-origen');
+        await page.selectDateInitFlight();
+        await page.takeScreenshot('seleccion-fecha-ida');
 
-        await page.selectDestinationFlight(copys);
-        await page.takeScreenshot('04-ciudad-destino');
+        await page.selectDateEndFlight();
+        await page.takeScreenshot('seleccion-fecha-vuelta');
 
-        const fechaIda = await page.locator('id=departureInputDatePickerId')
-        fechaIda.click();
-        await page.locator('span').filter({ hasText: copys['fecha_salida'] }).click();
-        await page.takeScreenshot('05-fecha-ida');
+        await page.selectPassengers();
+        await page.takeScreenshot('seleccion-pasajeros');
 
-        await page.locator('span').filter({ hasText: copys['fecha_llegada'] }).click();
-        await page.takeScreenshot('06-fecha-vuelta');
+        await page.selectButtonAndClick("#searchButton");
+        await page.takeScreenshot('busqueda-resultados-vuelos');
 
-        await page.getByRole('button', { name: '' }).nth(1).click();
-        await page.getByRole('button', { name: '' }).nth(2).click();
-        await page.getByRole('button', { name: '' }).nth(3).click();
-        const confirmar = await page.locator('div#paxControlSearchId > div > div:nth-of-type(2) > div > div > button')
-        confirmar.click();
+        await page.selectFlightsOneWay();
+        await page.takeScreenshot('seleccion-vuelo-ida');
 
-        await page.takeScreenshot('07-seleccion-pasajeros');
-        await expect(page.getByRole('button', { name: copys[idioma].buscar, exact: true })).toBeVisible()
-        await page.getByRole('button', { name: copys[idioma].buscar, exact: true }).click();
-        await page.takeScreenshot('08-buscar');
+        await page.selectFlightReturns();
+        await page.takeScreenshot("seleccion-vuelo-regreso");
 
-        await page.waitForSelector('#pageWrap');
-        await expect(page.locator(".journey_price_fare-select_label-text").first()).toBeVisible();
-        await page.locator('.journey_price_fare-select_label-text').first().click();
-        await page.waitForSelector(".journey_fares");
-        await page.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
-        //  await page.locator('.journey_fares').first().locator('.fare-flex').click();
-        await page.takeScreenshot('09-seleccion-vuelo-ida');
+        await page.waitForTimeout(500);
+        await page.takeScreenshot('resumen-de-vuelos-seleccionados');
 
-        await page.waitForTimeout(1500);
-        const isVisibleModal = await page.locator("#FB310").first().isVisible();
-
-        if (isVisibleModal) {
-            await expect(page.locator(".cro-button.cro-no-accept-upsell-button")).toBeVisible();
-            await page.locator(".cro-button.cro-no-accept-upsell-button").first().click();
-        }
-
-        await page.waitForSelector("#journeysContainerId_1", { timeout: 15000 });
-        const containerVuelta = page.locator("#journeysContainerId_1");
-        await expect(containerVuelta).toBeVisible();
-        // await expect(page.locator('.journey_price_fare-select_label-text').nth(22)).toBeVisible();
-        await containerVuelta.locator(".journey_price_fare-select_label-text").first().click();
-        await page.takeScreenshot('13-seleccion-vuelo-regreso');
-        await containerVuelta.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
-        await page.waitForTimeout(1500);
-
-        const isVisibleModal2 = await page.locator("#FB310").first().isVisible();
-
-        if (isVisibleModal2) {
-            await expect(page.locator(".cro-button.cro-no-accept-upsell-button")).toBeVisible();
-            await page.locator(".cro-button.cro-no-accept-upsell-button").first().click();
-        }
-
-        await page.takeScreenshot('13-resumen-de-vuelos-seleccionados');
-
-        await expect(page.locator(".button.page_button.btn-action")).toBeVisible();
-        await page.locator('.button.page_button.btn-action').click();
+        //boton de continuar
+        await page.selectButtonAndClick(".button.page_button.btn-action");
 
         //página de pasajeros
         await page.takeScreenshot("inicio-de-llenado-pagina-de-pasajeros");
@@ -136,12 +93,12 @@ test.describe('Comenzo prueba avianca', () => {
                 "334455"
             ];
 
-            const getDataRandom = (data: Array<string> = []) => {
+            const getDataRandom = (data: Array<string> = []): string => {
                 return data[Math.floor(Math.random() * data.length)];
             }
 
-            const getValueElement = (element: HTMLInputElement) => {
-                let value = null;
+            const getValueElement = (element: HTMLInputElement): string => {
+                let value: string | null = null;
                 if (element.name === "email") {
                     value = getDataRandom(emailsData);
                 }
@@ -159,7 +116,6 @@ test.describe('Comenzo prueba avianca', () => {
 
             const setValuesDefaultAutoForm = () => {
                 const elements = document.querySelectorAll('.ui-input');
-                console.log("elements: ", elements);
                 Array.from(elements).forEach((element, index) => {
                     if (element.tagName === "BUTTON") {
                         (element as HTMLButtonElement).click();
@@ -169,8 +125,8 @@ test.describe('Comenzo prueba avianca', () => {
                     else if (element.tagName === "INPUT") {
                         const containers = document.querySelectorAll(".ui-input-container");
                         Array.from(containers).forEach(e => { e.classList.add("is-focused") });
-                        let eventBlur = new Event("blur");
-                        let eventFocus = new Event("focus");
+                        let eventBlur: Event = new Event("blur");
+                        let eventFocus: Event = new Event("focus");
                         (element as HTMLInputElement).value = getValueElement(element as HTMLInputElement);
                         ['change', 'input'].forEach(event => {
                             let handleEvent = new Event(event, { bubbles: true, cancelable: false });
