@@ -23,12 +23,14 @@ declare module '@playwright/test' {
         selectPassengers(): Promise<void>;
         //#endregion
 
-        //#region métodos
-
+        //#region métodos selección de vuelos (solo ida y ida y vuelta)
         selectFlightsOneWay(): Promise<void>;
         selectFlightReturns(): Promise<void>;
         validateModalSelectionFlight(): Promise<void>;
+        //#endregion
 
+        //#region métodos para pasajeros
+        fillFieldsPassenger(): Promise<void>;
         //#endregion
     }
 }

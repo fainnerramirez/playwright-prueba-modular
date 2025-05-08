@@ -2,6 +2,7 @@ import { test as base, ElementHandle, expect, selectors } from '@playwright/test
 import type { copysType, Lang } from '../types/aviancaTypes';
 import type { Page } from 'playwright';
 import { copys } from '../data/copys';
+import { getValueElement } from './constants/constants';
 
 type propsFixtures = {
     home: Page,
@@ -164,6 +165,47 @@ export const test = base.extend<propsFixtures>({
             await page.validateModalSelectionFlight();
         }
 
+        await use(page);
+    },
+    passenger: async ({ page }, use) => {
+        page.fillFieldsPassenger = async (): Promise<void> => {
+            await page.waitForSelector(".passenger_data_group");
+            await page.evaluate(() => {
+                const setValuesDefaultAutoForm = () => {
+                    const elements = document.querySelectorAll('.ui-input');
+                    Array.from(elements).forEach((element) => {
+                        if (element.tagName === "BUTTON") {
+                            const elementButton = element as HTMLButtonElement;
+                            elementButton.click();
+                            const listOptions = document.querySelector(".ui-dropdown_list");
+                            (listOptions?.querySelector(".ui-dropdown_item>button") as HTMLButtonElement).click();
+                        }
+                        else if (element.tagName === "INPUT") {
+                            const elementInput = element as HTMLInputElement;
+                            const containers = document.querySelectorAll(".ui-input-container");
+                            Array.from(containers).forEach(e => { e.classList.add("is-focused") });
+                            let eventBlur: Event = new Event("blur");
+                            let eventFocus: Event = new Event("focus");
+                            elementInput.value = getValueElement(elementInput);
+                            ['change', 'input'].forEach(event => {
+                                let handleEvent = new Event(event, { bubbles: true, cancelable: false });
+                                element.dispatchEvent(handleEvent);
+                            });
+                            element.dispatchEvent(eventFocus);
+                            setTimeout(() => {
+                                element.dispatchEvent(eventBlur);
+                                Array.from(containers).forEach(e => { e.classList.remove("is-focused") });
+                            }, 100);
+                        }
+                    });
+
+                    const fieldAuthoritation = document.querySelector("#acceptNewCheckbox") as HTMLInputElement;
+                    if (fieldAuthoritation) fieldAuthoritation.checked = true;
+                }
+
+                setValuesDefaultAutoForm();
+            });
+        }
         await use(page);
     }
 });
