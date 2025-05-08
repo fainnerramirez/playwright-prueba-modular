@@ -22,7 +22,7 @@ export const test = base.extend({
             step++;
             const timestamp = page.getTimestamp();
             const name = `step${step}-${label}-${timestamp}.png`;
-            const buffer = await page.screenshot({ path: name });
+            const buffer = await page.screenshot({ path: `./images-tests/${name}` });
             await testInfo.attach(`${label} (${timestamp})`, {
                 body: buffer,
                 contentType: 'image/png',
@@ -143,7 +143,7 @@ export const test = base.extend({
             const containerVuelta = page.locator("#journeysContainerId_1");
             await expect(containerVuelta).toBeVisible();
             await containerVuelta.locator(".journey_price_fare-select_label-text").first().click();
-            await page.takeScreenshot('13-seleccion-vuelo-regreso');
+            await page.takeScreenshot('seleccion-vuelo-regreso');
             await containerVuelta.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
             await page.validateModalSelectionFlight();
         }
