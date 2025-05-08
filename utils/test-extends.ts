@@ -163,7 +163,7 @@ export const test = base.extend({
                     "luis vega",
                     "susan brown"
                 ];
-                
+
                 const lastNamesData: Array<string> = [
                     "Doe",
                     "Smith",
@@ -176,11 +176,11 @@ export const test = base.extend({
                     "Vega",
                     "Brown"
                 ];
-                
+
                 const emailsData: Array<string> = [
                     "monitoreo.digital@avianca.com"
                 ];
-                
+
                 const phoneNumbersData: Array<string> = [
                     "123456",
                     "987654",
@@ -193,11 +193,11 @@ export const test = base.extend({
                     "778899",
                     "334455"
                 ];
-                
+
                 const getDataRandom = (data: Array<string> = []): string => {
                     return data[Math.floor(Math.random() * data.length)];
                 }
-                
+
                 const getValueElement = (element: HTMLInputElement): string => {
                     let value: string | null = null;
                     if (element.name === "email") {
