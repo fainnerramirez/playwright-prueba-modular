@@ -1,19 +1,8 @@
-import { test as base, ElementHandle, expect, selectors } from '@playwright/test';
+import { test as base, ElementHandle, expect } from '@playwright/test';
 import type { Lang } from '../types/aviancaTypes';
-import type { Page } from 'playwright';
 import { copys } from '../data/copys';
-import { getValueElement } from './constants/constants';
 
-type propsFixtures = {
-    home: Page,
-    flights: Page,
-    passenger: Page,
-    services: Page,
-    seating: Page,
-    payment: Page
-}
-
-export const test = base.extend<propsFixtures>({
+export const test = base.extend({
     page: async ({ page }, use, testInfo) => {
         let step = 0;
 
@@ -76,10 +65,6 @@ export const test = base.extend<propsFixtures>({
             }
         }
 
-        await use(page);
-    },
-    home: async ({ page }, use) => {
-
         page.selectOriginFlight = async (): Promise<void> => {
             const currentLang = await page.getLangPage();
             await expect(page.locator('.content-wrap')).toBeVisible();
@@ -136,10 +121,6 @@ export const test = base.extend<propsFixtures>({
             oneWay.click();
         }
 
-        await use(page);
-    },
-    flights: async ({ page }, use) => {
-
         page.validateModalSelectionFlight = async (): Promise<void> => {
             await page.waitForTimeout(1500);
             const isVisibleModal = await page.locator("#FB310").first().isVisible();
@@ -150,7 +131,6 @@ export const test = base.extend<propsFixtures>({
         }
 
         page.selectFlightsOneWay = async (): Promise<void> => {
-            await page.waitForSelector('#pageWrap', { timeout: 15000 });
             await expect(page.locator(".journey_price_fare-select_label-text").first()).toBeVisible();
             await page.locator('.journey_price_fare-select_label-text').first().click();
             await page.waitForSelector(".journey_fares");
@@ -168,13 +148,74 @@ export const test = base.extend<propsFixtures>({
             await page.validateModalSelectionFlight();
         }
 
-        await use(page);
-    },
-    passenger: async ({ page }, use) => {
         page.fillFieldsPassenger = async (): Promise<void> => {
             await page.waitForSelector(".passenger_data_group");
             await page.evaluate(() => {
-                const setValuesDefaultAutoForm = () => {
+                const userNamesData: Array<string> = [
+                    "john doe",
+                    "jane smith",
+                    "alexander wilson",
+                    "maria gomez",
+                    "roberto perez",
+                    "lucia martinez",
+                    "david hernandez",
+                    "carla jones",
+                    "luis vega",
+                    "susan brown"
+                ];
+                
+                const lastNamesData: Array<string> = [
+                    "Doe",
+                    "Smith",
+                    "Wilson",
+                    "Gomez",
+                    "Perez",
+                    "Martinez",
+                    "Hernandez",
+                    "Jones",
+                    "Vega",
+                    "Brown"
+                ];
+                
+                const emailsData: Array<string> = [
+                    "monitoreo.digital@avianca.com"
+                ];
+                
+                const phoneNumbersData: Array<string> = [
+                    "123456",
+                    "987654",
+                    "654321",
+                    "321654",
+                    "987123",
+                    "456789",
+                    "102938",
+                    "112233",
+                    "778899",
+                    "334455"
+                ];
+                
+                const getDataRandom = (data: Array<string> = []): string => {
+                    return data[Math.floor(Math.random() * data.length)];
+                }
+                
+                const getValueElement = (element: HTMLInputElement): string => {
+                    let value: string | null = null;
+                    if (element.name === "email") {
+                        value = getDataRandom(emailsData);
+                    }
+                    else if (element.name === "phone_phoneNumberId") {
+                        value = getDataRandom(phoneNumbersData);
+                    }
+                    else if (element.id.includes("IdFirstName")) {
+                        value = getDataRandom(userNamesData);
+                    }
+                    else {
+                        value = getDataRandom(lastNamesData);
+                    }
+                    return value;
+                }
+
+                const setValuesDefaultAutoForm = async () => {
                     const elements = document.querySelectorAll('.ui-input');
                     Array.from(elements).forEach((element) => {
                         if (element.tagName === "BUTTON") {
@@ -205,14 +246,11 @@ export const test = base.extend<propsFixtures>({
                     const fieldAuthoritation = document.querySelector("#acceptNewCheckbox") as HTMLInputElement;
                     if (fieldAuthoritation) fieldAuthoritation.checked = true;
                 }
-
                 setValuesDefaultAutoForm();
             });
         }
         await use(page);
-    },
-    seating: async ({ page }, use) => { },
-    payment: async ({ page }, use) => { }
+    }
 });
 
 export { expect } from '@playwright/test';

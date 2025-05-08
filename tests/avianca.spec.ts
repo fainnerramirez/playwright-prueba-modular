@@ -42,6 +42,7 @@ test.describe('Comenzo prueba avianca', () => {
 
         //#region Selección de vuelos solo Ida ó Ida y Vuelta
 
+        await page.waitForSelector("#pageWrap");
         await page.selectFlightsOneWay();
         await page.takeScreenshot('seleccion-vuelo-ida');
 
