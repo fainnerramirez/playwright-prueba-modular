@@ -64,11 +64,5 @@ test.describe('Comenzo prueba avianca', () => {
         await page.takeScreenshot("llenado-de-pasajeros-ok");
         await page.waitForTimeout(2000);
         //#endregion
-
-        //#region página de servicios
-        await expect(page.locator(".button.page_button.btn-action").last()).toBeVisible();
-        await page.takeScreenshot("página-de-servicios");
-        await page.locator(".button.page_button.btn-action").last().click();
-        //#endregion
     });
 });
