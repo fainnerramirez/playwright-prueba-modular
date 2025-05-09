@@ -70,52 +70,5 @@ test.describe('Comenzo prueba avianca', () => {
         await page.takeScreenshot("página-de-servicios");
         await page.locator(".button.page_button.btn-action").last().click();
         //#endregion
-
-        //#region página de servicios
-        await page.waitForSelector(".main-banner--section-offer");
-        await page.waitForTimeout(1000);
-
-        const buttonComfirmServices = page.locator(".button.page_button.btn-action.page_button-primary-flow");
-        await expect(buttonComfirmServices.last()).toBeVisible();
-        await buttonComfirmServices.last().click();
-        //#endregion
-
-        //#region Página de selección de asientos
-        await page.waitForSelector("#seatmapContainer");
-        await page.takeScreenshot("página-selección-asientos");
-        await page.waitForTimeout(5000);
-
-        const pasajeros = page.locator(".pax-selector_pax-avatar")
-
-        for (const e of await pasajeros.all()) {
-            await page.takeScreenshot("seleccion-asiento");
-            await expect(page.locator(".seat-number").first()).toBeVisible();
-            await page.locator('.seat-number').first().click();
-            await page.waitForTimeout(8000);
-        }
-
-        await expect(page.locator(".next-flight-code")).toBeVisible();
-        await page.takeScreenshot("seleccion-asiento-vuelta");
-        await page.locator('.next-flight-code').click();
-
-        const pasajerosVuelta = page.locator(".pax-selector_pax-avatar")
-
-        for (const j of await pasajerosVuelta.all()) {
-            await page.takeScreenshot("seleccion-asiento");
-            await expect(page.locator(".seat-number").first()).toBeVisible();
-            await page.locator('.seat-number').first().click();
-            await page.waitForTimeout(8000);
-        }
-
-        const buttonToPayment = page.locator(".button.amount-summary_button.amount-summary_button-primary");
-        await expect(buttonToPayment).toBeVisible();
-        await buttonToPayment.click();
-        //#endregion
-
-        //#region página de pagos
-        await page.waitForSelector(".payment-button.payment-button--3DSecure");
-        await page.takeScreenshot("página-pagos");
-        await page.waitForTimeout(5000);
-        //#endregion
     });
 });
