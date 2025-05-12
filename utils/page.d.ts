@@ -32,5 +32,19 @@ declare module '@playwright/test' {
         //#region métodos para pasajeros
         fillFieldsPassenger(): Promise<void>;
         //#endregion
+
+        //#region métodos para servicios
+        //#endregion
+
+        //#region métodos para pagos
+        //#endregion
+
+        //#region páginas de avianca
+        homePageAvianca(): Promise<void>;
+        flightPageAvianca(): Promise<void>;
+        passengerPageAvianca(): Promise<void>;
+        servicesPageAvianca(): Promise<void>;
+        paymentPageAvianca(): Promise<void>;
+        //#endregion
     }
 }

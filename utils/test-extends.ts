@@ -4,6 +4,7 @@ import { copys } from '../data/copys';
 
 export const test = base.extend({
     page: async ({ page }, use, testInfo) => {
+        //#region métodos para flujos de la página de avianca
         let step = 0;
 
         page.getTimestamp = (): string => {
@@ -139,7 +140,7 @@ export const test = base.extend({
         }
 
         page.selectFlightReturns = async (): Promise<void> => {
-            await page.waitForSelector("#journeysContainerId_1", { timeout: 15000 });
+            await page.waitForSelector("#journeysContainerId_1", { timeout: 20000 });
             const containerVuelta = page.locator("#journeysContainerId_1");
             await expect(containerVuelta).toBeVisible();
             await containerVuelta.locator(".journey_price_fare-select_label-text").first().click();
@@ -249,6 +250,43 @@ export const test = base.extend({
                 setValuesDefaultAutoForm();
             });
         }
+        //#endregion
+
+        //#region páginas o flujos de avianca
+        page.homePageAvianca = async (): Promise<void> => {
+            await page.selectOriginFlight();
+            await page.takeScreenshot('seleccion-ciudad-origen');
+            await page.selectDestinationFlight();
+            await page.takeScreenshot('seleccion-ciudad-destino');
+            await page.selectDateInitFlight();
+            await page.takeScreenshot('seleccion-fecha-ida');
+            await page.selectDateEndFlight();
+            await page.takeScreenshot('seleccion-fecha-vuelta');
+            await page.selectPassengers();
+            await page.takeScreenshot('seleccion-pasajeros');
+            await page.selectButtonAndClick("#searchButton");
+            await page.takeScreenshot('busqueda-resultados-vuelos');
+            await page.waitForSelector("#pageWrap");
+        }
+
+        page.flightPageAvianca = async (): Promise<void> => {
+            await page.selectFlightsOneWay();
+            await page.takeScreenshot('seleccion-vuelo-ida');
+            await page.selectFlightReturns();
+            await page.takeScreenshot("seleccion-vuelo-regreso");
+            await page.waitForTimeout(500);
+            await page.takeScreenshot('resumen-de-vuelos-seleccionados');
+            await page.selectButtonAndClick(".button.page_button.btn-action");
+        }
+
+        page.passengerPageAvianca = async (): Promise<void> => {
+            await page.takeScreenshot("inicio-de-llenado-pagina-de-pasajeros");
+            await page.fillFieldsPassenger();
+            await page.takeScreenshot("llenado-de-pasajeros-ok");
+        }
+
+        //#endregion
+
         await use(page);
     }
 });
