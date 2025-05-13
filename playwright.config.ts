@@ -40,7 +40,7 @@ export default defineConfig({
   reporter: 'html',
   outputDir: 'test-results',
   use: {
-    headless: false,
+    headless: true,
     screenshot: 'on',
     video: 'on',
     ignoreHTTPSErrors: true,
