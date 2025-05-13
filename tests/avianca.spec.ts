@@ -6,6 +6,6 @@ test.describe('Comenzo prueba avianca', () => {
         await page.homePageAvianca();
         await page.flightPageAvianca();
         await page.passengerPageAvianca();
-        await page.waitForTimeout(5000);
+        await page.servicesPageAvianca();
     });
 });

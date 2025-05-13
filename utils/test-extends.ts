@@ -298,6 +298,15 @@ export const test = base.extend({
             await page.fillFieldsPassenger();
             await page.waitForTimeout(1500);
             await page.takeScreenshot("llenado-de-pasajeros-ok");
+            const continueButton = page.locator(".button.page_button.btn-action");
+            await expect(continueButton.last()).toBeVisible();
+            await continueButton.last().click();
+        }
+
+        page.servicesPageAvianca = async (): Promise<void> => {
+            await page.waitForSelector(".main-banner--section-offer");
+            await page.waitForTimeout(3500);
+            await page.takeScreenshot("pagina de servicios");
         }
 
         //#endregion
