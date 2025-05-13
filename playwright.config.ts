@@ -50,10 +50,10 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'firefox',
+      name: 'chromium',
       use: {
-        browserName: 'firefox',
-        channel: 'firefox',
+        browserName: 'chromium',
+        // channel: 'chrome',
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         viewport: { width: 1700, height: 1400 },
         locale: 'es-ES',
