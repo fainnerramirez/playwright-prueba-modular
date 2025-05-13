@@ -45,7 +45,7 @@ export default defineConfig({
     video: 'on',
     ignoreHTTPSErrors: true,
     launchOptions: {
-        args: ['--disable-http2']
+      args: ['--disable-http2']
     }
   },
   projects: [
@@ -79,12 +79,39 @@ export default defineConfig({
         video: 'on',
       },
     },
-
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
         browserName: 'webkit',
+        locale: 'es-ES',
+        extraHTTPHeaders: {
+          'accept-language': 'es-ES,es;q=0.9',
+        },
+        video: 'on',
+      },
+    },
+    {
+      name: 'Microsoft Edge',
+      use: {
+        ...devices['Desktop Edge'],
+        browserName: 'chromium',
+        channel: 'msedge',
+        viewport: { width: 1700, height: 1400 },
+        locale: 'es-ES',
+        extraHTTPHeaders: {
+          'accept-language': 'es-ES,es;q=0.9',
+        },
+        video: 'on',
+      },
+    },
+    {
+      name: 'Google Chrome',
+      use: {
+        ...devices['Desktop Chrome'],
+        browserName: 'chromium',
+        channel: 'chrome',
+        viewport: { width: 1700, height: 1400 },
         locale: 'es-ES',
         extraHTTPHeaders: {
           'accept-language': 'es-ES,es;q=0.9',
