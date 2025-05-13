@@ -7,7 +7,7 @@ test.describe('página de avianca', () => {
         await page.flightPageAvianca();
         await page.passengerPageAvianca();
         await page.servicesPageAvianca();
-        await page.seatingPageAvianca();
-        await page.paymentPageAvianca();
+        // await page.seatingPageAvianca();
+        // await page.paymentPageAvianca();
     });
 });

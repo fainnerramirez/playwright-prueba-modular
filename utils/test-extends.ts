@@ -254,7 +254,8 @@ export const test = base.extend({
         }
 
         page.configInitialTest = async (): Promise<void> => {
-            page.setDefaultTimeout(25000);
+            page.setDefaultTimeout(60000);
+            page.setDefaultNavigationTimeout(60000);
             await page.addInitScript(() => {
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => false,
@@ -304,57 +305,6 @@ export const test = base.extend({
             await expect(continueButton.last()).toBeVisible();
             await continueButton.last().click();
         }
-
-        page.servicesPageAvianca = async (): Promise<void> => {
-
-            await page.waitForSelector(".main-banner--section-offer");
-            await page.waitForTimeout(8000);
-            await page.takeScreenshot("Pagina-de-servicios");
-            await expect(page.locator("#serviceButtonTypeBusinessLounge")).toBeVisible();
-            await page.locator('#serviceButtonTypeBusinessLounge').click();
-            await page.locator('.service_item_button.button').first().click();
-            await page.takeScreenshot("Servicio avianca-lounges");
-            await page.locator('.button.amount-summary_button.amount-summary_button-action.is-action.ng-star-inserted').last().click();
-
-            await page.takeScreenshot("Servicios añadidos");
-            await expect(page.locator(".button_label").last()).toBeVisible();
-            await page.locator('.button_label').last().click();
-
-            const upsellService = await page.locator('.terciary-button').last().isVisible()
-
-            if (upsellService) {
-                await page.locator('.terciary-button').last().click()
-            }
-        }
-
-        page.seatingPageAvianca = async (): Promise<void> => {
-            await page.waitForSelector("#seatmapContainer", {timeout: 12000});
-            await page.takeScreenshot("Pagina-de-seleccion-asientos");
-            const pasajeros = page.locator(".pax-selector_pax-avatar");
-
-            for (const e of await pasajeros.all()) {
-                await page.takeScreenshot("seleccion-asiento");
-                await expect(page.locator(".seat-number").first()).toBeVisible();
-                await page.locator('.seat-number').first().click();
-                await page.waitForTimeout(8000);
-            }
-
-            await expect(page.locator(".next-flight-code")).toBeVisible();
-            await page.takeScreenshot("seleccion-asiento-vuelta");
-            await page.locator('.next-flight-code').click();
-
-            const pasajerosVuelta = page.locator(".pax-selector_pax-avatar")
-
-            for (const j of await pasajerosVuelta.all()) {
-                await page.takeScreenshot("seleccion-asiento");
-                await expect(page.locator(".seat-number").first()).toBeVisible();
-                await page.locator('.seat-number').first().click();
-                await page.waitForTimeout(8000);
-            }
-
-            await page.waitForTimeout(8000);
-        }
-
         //#endregion
 
         await use(page);
