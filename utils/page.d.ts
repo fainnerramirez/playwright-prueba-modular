@@ -1,5 +1,5 @@
 import { ElementHandle, Locator, Page } from '@playwright/test';
-import { copysType, Lang } from '../types/aviancaTypes';
+import type { copysType, Lang } from '../types/aviancaTypes';
 
 declare module '@playwright/test' {
     interface Page {
@@ -45,6 +45,7 @@ declare module '@playwright/test' {
         flightPageAvianca(): Promise<void>;
         passengerPageAvianca(): Promise<void>;
         servicesPageAvianca(): Promise<void>;
+        seatingPageAvianca(): Promise<void>;
         paymentPageAvianca(): Promise<void>;
         //#endregion
     }

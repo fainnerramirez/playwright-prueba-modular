@@ -1,11 +1,13 @@
 import { test } from '../utils/test-extends';
 
-test.describe('Comenzo prueba avianca', () => {
-    test('prueba home avianca', async ({ page }) => {
+test.describe('página de avianca', () => {
+    test('test flujos de avianca', async ({ page }) => {
         await page.configInitialTest();
         await page.homePageAvianca();
         await page.flightPageAvianca();
         await page.passengerPageAvianca();
         await page.servicesPageAvianca();
+        await page.seatingPageAvianca();
+        await page.paymentPageAvianca();
     });
 });
