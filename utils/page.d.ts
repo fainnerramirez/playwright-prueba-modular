@@ -40,6 +40,7 @@ declare module '@playwright/test' {
         //#endregion
 
         //#region páginas de avianca
+        configInitialTest(): Promise<void>;
         homePageAvianca(): Promise<void>;
         flightPageAvianca(): Promise<void>;
         passengerPageAvianca(): Promise<void>;

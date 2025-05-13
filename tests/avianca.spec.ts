@@ -2,34 +2,10 @@ import { test } from '../utils/test-extends';
 
 test.describe('Comenzo prueba avianca', () => {
     test('prueba home avianca', async ({ page }) => {
-        //#region  configuración Inicial
-        test.setTimeout(300_000);
-
-        await page.addInitScript(() => {
-            Object.defineProperty(navigator, 'webdriver', {
-                get: () => false,
-            });
-        });
-
-        await page.goto('https://www.avianca.com/');
-        await page.takeScreenshot('página-principal-avianca');
-        await page.verifyCookies();
-        //#endregion
-
-        //#region Home
+        await page.configInitialTest();
         await page.homePageAvianca();
-        //#endregion
-
-        //#region Selección de vuelos solo Ida ó Ida y Vuelta
         await page.flightPageAvianca();
-        //#endregion
-
-        //#region página de pasajeros
-        await page.takeScreenshot("inicio-de-llenado-pagina-de-pasajeros");
-        await page.fillFieldsPassenger();
-
-        await page.takeScreenshot("llenado-de-pasajeros-ok");
-        await page.waitForTimeout(2000);
-        //#endregion
+        await page.passengerPageAvianca();
+        await page.waitForTimeout(5000);
     });
 });

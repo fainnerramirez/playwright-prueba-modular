@@ -250,6 +250,20 @@ export const test = base.extend({
                 setValuesDefaultAutoForm();
             });
         }
+
+        page.configInitialTest = async (): Promise<void> => {
+
+            await page.addInitScript(() => {
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => false,
+                });
+            });
+
+            await page.goto('https://www.avianca.com/');
+            await page.takeScreenshot('página-principal-avianca');
+            await page.verifyCookies();
+        }
+
         //#endregion
 
         //#region páginas o flujos de avianca
@@ -282,6 +296,7 @@ export const test = base.extend({
         page.passengerPageAvianca = async (): Promise<void> => {
             await page.takeScreenshot("inicio-de-llenado-pagina-de-pasajeros");
             await page.fillFieldsPassenger();
+            await page.waitForTimeout(1500);
             await page.takeScreenshot("llenado-de-pasajeros-ok");
         }
 
