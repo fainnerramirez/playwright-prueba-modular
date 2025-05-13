@@ -258,6 +258,9 @@ export const test = base.extend({
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => false,
                 });
+                Object.defineProperty(navigator, 'languages', { get: () => ['es-ES', 'es'] });
+                Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
+                window.chrome = { runtime: {} }; // Chrome detection
             });
 
             await page.goto('https://www.avianca.com/');
