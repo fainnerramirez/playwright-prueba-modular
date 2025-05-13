@@ -32,7 +32,7 @@
 //   snapshotDir: './snapshots'
 // });
 
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
@@ -52,15 +52,44 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
+        ...devices['Desktop Chrome'],
         browserName: 'chromium',
-        // channel: 'chrome',
+        channel: 'chrome',
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         viewport: { width: 1700, height: 1400 },
         locale: 'es-ES',
         extraHTTPHeaders: {
           'accept-language': 'es-ES,es;q=0.9',
         },
-        video: 'on'
+        video: 'on',
+      },
+    },
+
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        browserName: 'firefox',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
+        viewport: { width: 1700, height: 1400 },
+        locale: 'es-ES',
+        extraHTTPHeaders: {
+          'accept-language': 'es-ES,es;q=0.9',
+        },
+        video: 'on',
+      },
+    },
+
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        browserName: 'webkit',
+        locale: 'es-ES',
+        extraHTTPHeaders: {
+          'accept-language': 'es-ES,es;q=0.9',
+        },
+        video: 'on',
       },
     },
   ],
