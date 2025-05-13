@@ -254,8 +254,6 @@ export const test = base.extend({
         }
 
         page.configInitialTest = async (): Promise<void> => {
-            page.setDefaultTimeout(60000);
-            page.setDefaultNavigationTimeout(60000);
             await page.addInitScript(() => {
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => false,
