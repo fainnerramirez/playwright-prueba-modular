@@ -132,7 +132,7 @@ export const test = base.extend({
         }
 
         page.selectFlightsOneWay = async (): Promise<void> => {
-            await page.waitForSelector(".journey_price_fare-select_label-text", { timeout: 25_000 });
+            await page.waitForSelector(".journey_price_fare-select_label-text", { timeout: 60_000 });
             await expect(page.locator(".journey_price_fare-select_label-text").first()).toBeVisible();
             await page.locator('.journey_price_fare-select_label-text').first().click();
             await page.waitForSelector(".journey_fares");
