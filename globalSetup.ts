@@ -1,5 +1,6 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 export default async function globalSetup() {
     const proxyListApiUrl =
@@ -15,15 +16,37 @@ export default async function globalSetup() {
             .map(p => p.trim())
             .filter(Boolean);
 
-        const selectedProxy = proxies[0]; // puedes implementar lógica para testear cuál funciona mejor
+        console.log(`🔍 Obtenidos ${proxies.length} proxies. Probando validez...`);
 
-        if (!selectedProxy) throw new Error('❌ No se encontraron proxies válidos.');
+        for (const proxy of proxies) {
+            const proxyUrl = `http://${proxy}`;
+            const agent = new HttpsProxyAgent(proxyUrl);
 
-        const envContent = `SELECTED_PROXY=http://${selectedProxy}`;
-        fs.writeFileSync('.proxy-env', envContent);
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000); // 5 segundos
 
-        console.log(`✅ Proxy guardado: ${selectedProxy}`);
+            try {
+                const res = await fetch('https://www.google.com', {
+                    agent,
+                    signal: controller.signal,
+                });
+
+                clearTimeout(timeout);
+
+                if (res.ok) {
+                    fs.writeFileSync('.proxy-env', `SELECTED_PROXY=${proxyUrl}`);
+                    console.log(`✅ Proxy funcional guardado: ${proxy}`);
+                    return;
+                }
+            } catch (err) {
+                console.warn(`❌ Proxy falló: ${proxy}`);
+                clearTimeout(timeout);
+                continue;
+            }
+        }
+
+        console.error('❌ No se encontró ningún proxy funcional.');
     } catch (err) {
-        console.error('❌ Error al obtener el proxy:', err);
+        console.error('❌ Error al obtener la lista de proxies:', err);
     }
 }
