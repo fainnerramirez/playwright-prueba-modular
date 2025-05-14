@@ -21,9 +21,11 @@ export const test = base.extend({
 
         page.takeScreenshot = async (label: string): Promise<void> => {
             step++;
+
             const timestamp = page.getTimestamp();
             const name = `step${step}-${label}-${timestamp}.png`;
             const buffer = await page.screenshot({ path: `./images-tests/${name}` });
+            await page.moveMouseTo(100, 200);
             await testInfo.attach(`${label} (${timestamp})`, {
                 body: buffer,
                 contentType: 'image/png',
@@ -31,6 +33,8 @@ export const test = base.extend({
         };
 
         page.verifyCookies = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const consentBtn = page.locator('#onetrust-pc-btn-handler');
             if (await consentBtn.isVisible()) {
                 await consentBtn.click();
@@ -59,6 +63,8 @@ export const test = base.extend({
         }
 
         page.selectButtonAndClick = async (selector: string): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const elementPresent = await page.isElementPresent(selector);
             if (elementPresent) {
                 await expect(page.locator(selector)).toBeVisible();
@@ -67,6 +73,8 @@ export const test = base.extend({
         }
 
         page.selectOriginFlight = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const currentLang = await page.getLangPage();
             await expect(page.locator('.content-wrap')).toBeVisible();
             await expect(page.locator('#originBtn')).toBeVisible();
@@ -78,6 +86,8 @@ export const test = base.extend({
         }
 
         page.selectDestinationFlight = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const currentLang = await page.getLangPage();
             const destino = page.getByPlaceholder(copys[currentLang].destino);
             await destino.click();
@@ -87,6 +97,8 @@ export const test = base.extend({
         }
 
         page.selectDateInitFlight = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             await expect(page.locator('id=departureInputDatePickerId')).toBeVisible();
             const fechaIda = await page.locator('id=departureInputDatePickerId');
             fechaIda.click();
@@ -95,11 +107,15 @@ export const test = base.extend({
         }
 
         page.selectDateEndFlight = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             await expect(page.locator('span').filter({ hasText: copys['fecha_llegada'] })).toBeVisible();
             await page.locator('span').filter({ hasText: copys['fecha_llegada'] }).click();
         }
 
         page.selectPassengers = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             await page.waitForTimeout(300);
             await page.getByRole('button', { name: '' }).nth(1).click();
             await page.getByRole('button', { name: '' }).nth(2).click();
@@ -109,6 +125,8 @@ export const test = base.extend({
         }
 
         page.selectCheckWayReturn = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const wayReturn = page.locator("#journeytypeId_0");
             await expect(wayReturn).toBeVisible();
             await wayReturn.scrollIntoViewIfNeeded();
@@ -116,6 +134,8 @@ export const test = base.extend({
         }
 
         page.selectCheckOneWay = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             const oneWay = page.locator("#journeytypeId_1");
             await expect(oneWay).toBeVisible();
             await oneWay.scrollIntoViewIfNeeded();
@@ -123,6 +143,8 @@ export const test = base.extend({
         }
 
         page.validateModalSelectionFlight = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             await page.waitForTimeout(1500);
             const isVisibleModal = await page.locator("#FB310").first().isVisible();
             if (isVisibleModal) {
@@ -132,6 +154,8 @@ export const test = base.extend({
         }
 
         page.selectFlightsOneWay = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+
             await page.waitForSelector(".journey_price_fare-select_label-text", { timeout: 60_000 });
             await expect(page.locator(".journey_price_fare-select_label-text").first()).toBeVisible();
             await page.locator('.journey_price_fare-select_label-text').first().click();
@@ -141,6 +165,8 @@ export const test = base.extend({
         }
 
         page.selectFlightReturns = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
+            await page.moveMouseTo(100, 200);
             await page.waitForSelector("#journeysContainerId_1", { timeout: 20000 });
             const containerVuelta = page.locator("#journeysContainerId_1");
             await expect(containerVuelta).toBeVisible();
@@ -149,6 +175,10 @@ export const test = base.extend({
             await page.takeScreenshot('seleccion-vuelo-regreso');
             await containerVuelta.locator('.journey_fares').first().locator('.light-basic.cro-new-basic-button').click();
             await page.validateModalSelectionFlight();
+        }
+
+        page.moveMouseTo = async (x: number, y: number): Promise<void> => {
+            await page.mouse.move(x, y);
         }
 
         page.fillFieldsPassenger = async (): Promise<void> => {
@@ -254,6 +284,7 @@ export const test = base.extend({
         }
 
         page.configInitialTest = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
             await page.addInitScript(() => {
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => false,
@@ -273,6 +304,7 @@ export const test = base.extend({
 
         //#region páginas o flujos de avianca
         page.homePageAvianca = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
             await page.selectOriginFlight();
             await page.takeScreenshot('seleccion-ciudad-origen');
             await page.selectDestinationFlight();
@@ -289,6 +321,7 @@ export const test = base.extend({
         }
 
         page.flightPageAvianca = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
             await page.selectFlightsOneWay();
             await page.takeScreenshot('seleccion-vuelo-ida');
             await page.selectFlightReturns();
@@ -299,6 +332,7 @@ export const test = base.extend({
         }
 
         page.passengerPageAvianca = async (): Promise<void> => {
+            await page.moveMouseTo(100, 200);
             await page.takeScreenshot("inicio-de-llenado-pagina-de-pasajeros");
             await page.fillFieldsPassenger();
             await page.waitForTimeout(1500);

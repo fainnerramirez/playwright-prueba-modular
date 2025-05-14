@@ -11,6 +11,7 @@ declare module '@playwright/test' {
         getTimestamp(): string;
         takeScreenshot(label: string): Promise<void>;
         getLangPage(): Promise<Lang>;
+        moveMouseTo(x: number, y: number): Promise<void>;
         //#endregion
 
         //#region métodos Home
