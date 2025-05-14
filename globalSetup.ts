@@ -12,6 +12,7 @@ export default async function globalSetup() {
         '91.185.236.24:4145'
     ];
 
+    //test2
     const MAX_RETRIES = 5;
     let retries = 0;
     let selectedProxy: string | null = null;
