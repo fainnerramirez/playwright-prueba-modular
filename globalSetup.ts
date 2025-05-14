@@ -9,7 +9,7 @@ export default async function globalSetup() {
     try {
         const response = await fetch(proxyListApiUrl);
         const text = await response.text();
-
+        //test1
         const proxies = text
             .trim()
             .split('\n')
