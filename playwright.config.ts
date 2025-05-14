@@ -42,7 +42,6 @@ export default defineConfig({
   use: {
     headless: true,
     screenshot: 'on',
-    video: 'on',
     ignoreHTTPSErrors: true,
     launchOptions: {
       args: ['--disable-http2']
