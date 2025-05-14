@@ -306,6 +306,7 @@ export const test = base.extend({
 
         //#region páginas o flujos de avianca
         page.homePageAvianca = async (): Promise<void> => {
+            
             await page.moveMouseTo(100, 200);
             await page.selectOriginFlight();
             await page.takeScreenshot('seleccion-ciudad-origen');
