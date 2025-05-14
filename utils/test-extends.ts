@@ -178,7 +178,9 @@ export const test = base.extend({
         }
 
         page.moveMouseTo = async (x: number, y: number): Promise<void> => {
-            await page.mouse.move(x, y);
+            await page.mouse.move(x, y, { steps: 20 });
+            await page.keyboard.press('ArrowDown');
+            await page.waitForTimeout(1000); // simula que el usuario piensa
         }
 
         page.fillFieldsPassenger = async (): Promise<void> => {

@@ -40,11 +40,19 @@ export default defineConfig({
   reporter: 'html',
   outputDir: 'test-results',
   use: {
-    headless: true,
+    headless: false,
     screenshot: 'on',
     ignoreHTTPSErrors: true,
     launchOptions: {
-      args: ['--disable-http2']
+      args: [
+        '--disable-http2',
+        '--disable-blink-features=AutomationControlled',
+        '--no-sandbox',
+        '--disable-infobars',
+        '--disable-dev-shm-usage',
+        '--disable-extensions',
+        '--start-maximized'
+      ]
     }
   },
   projects: [
