@@ -1,52 +1,25 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import type { GimmeProxyResponse } from "./types/aviancaTypes";
 
 export default async function globalSetup() {
-    const proxyListApiUrl =
-        'https://www.proxy-list.download/api/v1/get?type=http&anon=elite&country=US';
+    const gimmeProxyUrl = 'https://gimmeproxy.com/api/getProxy?supportsHttps=true&anonymityLevel=1';
 
     try {
-        const response = await fetch(proxyListApiUrl);
-        const text = await response.text();
-        //test1
-        const proxies = text
-            .trim()
-            .split('\n')
-            .map(p => p.trim())
-            .filter(Boolean);
+        const response = await fetch(gimmeProxyUrl);
+        const proxyData = await response.json() as GimmeProxyResponse;
 
-        console.log(`🔍 Obtenidos ${proxies.length} proxies. Probando validez...`);
-
-        for (const proxy of proxies) {
-            const proxyUrl = `http://${proxy}`;
-            const agent = new HttpsProxyAgent(proxyUrl);
-
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 5000); // 5 segundos
-
-            try {
-                const res = await fetch('https://www.google.com', {
-                    agent,
-                    signal: controller.signal,
-                });
-
-                clearTimeout(timeout);
-
-                if (res.ok) {
-                    fs.writeFileSync('.proxy-env', `SELECTED_PROXY=${proxyUrl}`);
-                    console.log(`✅ Proxy funcional guardado: ${proxy}`);
-                    return;
-                }
-            } catch (err) {
-                console.warn(`❌ Proxy falló: ${proxy}`);
-                clearTimeout(timeout);
-                continue;
-            }
+        if (proxyData.error) {
+            throw new Error(proxyData.error);
         }
 
-        console.error('❌ No se encontró ningún proxy funcional.');
+        const selectedProxy = `${proxyData.protocol}://${proxyData.ip}:${proxyData.port}`;
+        const envContent = `SELECTED_PROXY=${selectedProxy}`;
+
+        fs.writeFileSync('.proxy-env', envContent); // Guardamos la variable temporal
+
+        console.log(`✅ Proxy guardado: ${selectedProxy}`);
     } catch (err) {
-        console.error('❌ Error al obtener la lista de proxies:', err);
+        console.error('❌ No se pudo obtener el proxy:', err);
     }
 }
