@@ -186,6 +186,7 @@ export const test = base.extend({
         page.fillFieldsPassenger = async (): Promise<void> => {
             await page.waitForSelector(".passenger_data_group");
             await page.evaluate(() => {
+
                 const userNamesData: Array<string> = [
                     "john doe",
                     "jane smith",

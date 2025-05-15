@@ -32,7 +32,7 @@
 //   snapshotDir: './snapshots'
 // });
 
-// pruebas en gtihub actions
+// pruebas en github actions
 
 import dotenv from 'dotenv';
 import fs from 'fs';
