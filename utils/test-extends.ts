@@ -84,7 +84,7 @@ export const test = base.extend({
             await origen.press('Enter');
             await (page.locator('id=' + copys['ciudad_origen'])).click();
         }
-
+  
         page.selectDestinationFlight = async (): Promise<void> => {
             await page.moveMouseTo(100, 200);
 
