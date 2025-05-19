@@ -5,7 +5,7 @@ import { copys } from '../data/copys';
 export const test = base.extend({
     page: async ({ page }, use, testInfo) => {
         //#region métodos para flujos de la página de avianca
-        let step = 0;
+        let step: number = 0;
 
         page.getTimestamp = (): string => {
             const now = new Date();
@@ -72,6 +72,10 @@ export const test = base.extend({
             }
         }
 
+        page.wait = async (ms: number): Promise<void> => {
+            return new Promise<void>(resolve => setTimeout(() => resolve, ms));
+        }
+
         page.selectOriginFlight = async (): Promise<void> => {
             await page.moveMouseTo(100, 200);
 
@@ -84,7 +88,7 @@ export const test = base.extend({
             await origen.press('Enter');
             await (page.locator('id=' + copys['ciudad_origen'])).click();
         }
-  
+
         page.selectDestinationFlight = async (): Promise<void> => {
             await page.moveMouseTo(100, 200);
 
@@ -307,7 +311,7 @@ export const test = base.extend({
 
         //#region páginas o flujos de avianca
         page.homePageAvianca = async (): Promise<void> => {
-            
+
             await page.moveMouseTo(100, 200);
             await page.selectOriginFlight();
             await page.takeScreenshot('seleccion-ciudad-origen');
